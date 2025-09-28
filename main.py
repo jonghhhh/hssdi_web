@@ -15,10 +15,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# 애플리케이션 시작 시 데이터베이스 초기화
-@app.on_event("startup")
-async def startup_event():
-    await init_db()
+
 
 # 세션 미들웨어 추가
 app.add_middleware(SessionMiddleware, secret_key="hssdi-admin-secret-key-2025")

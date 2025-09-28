@@ -2,10 +2,19 @@ services:
   - type: web
     name: hssdi-web
     env: python
-    buildCommand: ./build.sh
-    startCommand: gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+    region: singapore # 예: 가까운 리전으로 설정
+    plan: free # 또는 유료 플랜
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT"
+    healthCheckPath: "/"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: "3.11.9"
       - key: DATABASE_URL
-        value: sqlite+aiosqlite:///./hssdi.db
+        value: "sqlite+aiosqlite:///data/hssdi.db"
+      - key: PYTHONPATH
+        value: "."
+    disks:
+      - name: hssdi-data
+        mountPath: /data
+        sizeGB: 1
