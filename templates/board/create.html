@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}게시물 작성 - 게시판{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>새 게시물 작성</h1>
+        <p>연구 성과 및 학술 정보를 공유해주세요</p>
+    </section>
+
+    <div class="card">
+        <form method="POST" action="/board/create">
+            <div class="form-group">
+                <label class="form-label" for="title">제목 *</label>
+                <input type="text" id="title" name="title" class="form-control" required placeholder="게시물 제목을 입력하세요">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="category_id">카테고리</label>
+                <select id="category_id" name="category_id" class="form-control">
+                    <option value="">카테고리 선택 (선택사항)</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="content">내용 *</label>
+                <textarea id="content" name="content" class="form-control" rows="15" required placeholder="게시물 내용을 입력하세요&#10;&#10;마크다운 문법을 지원합니다:&#10;# 제목&#10;## 소제목&#10;**굵은 글씨**&#10;*기울임*&#10;- 목록&#10;&#10;```&#10;코드 블록&#10;```"></textarea>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary">게시물 등록</button>
+                <a href="/board" class="btn btn-outline" style="margin-left: 1rem;">취소</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- 작성 가이드 -->
+    <div class="card">
+        <h3 class="card-title">작성 가이드</h3>
+        <div class="grid grid-2">
+            <div>
+                <h4 style="color: var(--primary-color);">게시물 작성 요령</h4>
+                <ul>
+                    <li>명확하고 구체적인 제목을 작성해주세요</li>
+                    <li>연구 주제, 방법론, 결과를 체계적으로 기술해주세요</li>
+                    <li>참고문헌이나 데이터 출처를 명시해주세요</li>
+                    <li>다른 연구자들이 이해하기 쉽게 작성해주세요</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: var(--secondary-color);">카테고리 안내</h4>
+                <ul>
+                    {% for category in categories %}
+                    <li><strong>{{ category.name }}</strong>: {{ category.description or '해당 분야 관련 게시물' }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 자동 저장 기능
+let autoSaveTimer;
+const titleInput = document.getElementById('title');
+const contentTextarea = document.getElementById('content');
+
+function autoSave() {
+    const title = titleInput.value;
+    const content = contentTextarea.value;
+
+    if (title || content) {
+        localStorage.setItem('draft_title', title);
+        localStorage.setItem('draft_content', content);
+        console.log('초안이 저장되었습니다.');
+    }
+}
+
+// 페이지 로드 시 초안 복원
+document.addEventListener('DOMContentLoaded', function() {
+    const draftTitle = localStorage.getItem('draft_title');
+    const draftContent = localStorage.getItem('draft_content');
+
+    if (draftTitle && !titleInput.value) {
+        titleInput.value = draftTitle;
+    }
+    if (draftContent && !contentTextarea.value) {
+        contentTextarea.value = draftContent;
+    }
+});
+
+// 입력할 때마다 자동 저장 (3초 후)
+[titleInput, contentTextarea].forEach(element => {
+    element.addEventListener('input', function() {
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(autoSave, 3000);
+    });
+});
+
+// 폼 제출 시 초안 삭제
+document.querySelector('form').addEventListener('submit', function() {
+    localStorage.removeItem('draft_title');
+    localStorage.removeItem('draft_content');
+});
+
+// 텍스트 에리어 자동 높이 조절
+contentTextarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
+</script>
+{% endblock %}

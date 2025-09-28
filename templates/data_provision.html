@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}데이터 제공 - 인문·사회과학 데이터 연구소{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+        <div>
+            <h1>데이터 제공 서비스</h1>
+            <p>연구에 활용할 수 있는 다양한 사회과학 데이터를 수집하여 제공합니다</p>
+        </div>
+    </section>
+
+    <!-- 데이터 제공 개요 -->
+    <div class="card">
+        <h2 class="card-title">데이터 제공 개요</h2>
+        <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+            인문·사회과학 데이터 연구소(HSSDI)는 연구자들이 사회과학 연구에 활용할 수 있도록
+            다양한 형태의 데이터를 체계적으로 수집하고 제공하는 서비스를 운영하고 있습니다.
+            수집된 모든 데이터는 연구 목적으로 활용 가능하며, 개인정보 보호법 및 연구윤리 규정을 준수합니다.
+        </p>
+
+        <div class="grid grid-2">
+            <div style="border-left: 4px solid var(--primary-color); padding-left: 1rem;">
+                <h4>제공 목적</h4>
+                <ul>
+                    <li>사회과학 연구의 데이터 기반 강화</li>
+                    <li>실증적 연구 방법론 확산</li>
+                    <li>연구 데이터의 재활용성 증대</li>
+                    <li>학제간 협력 연구 촉진</li>
+                </ul>
+            </div>
+            <div style="border-left: 4px solid var(--secondary-color); padding-left: 1rem;">
+                <h4>활용 대상</h4>
+                <ul>
+                    <li>인문·사회과학 분야 연구자</li>
+                    <li>대학원생 및 박사과정생</li>
+                    <li>정책 연구기관 관계자</li>
+                    <li>데이터 기반 연구에 관심 있는 모든 분</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 수집 데이터 유형 -->
+    <div class="card">
+        <h2 class="card-title">수집 데이터 유형</h2>
+        <div class="grid grid-2" style="gap: 2rem;">
+            <div class="card" style="background: var(--light-brown); padding: 2rem;">
+                <h3 style="color: var(--primary-color); text-align: center;">📰 뉴스 데이터</h3>
+                <ul style="margin-top: 1rem;">
+                    <li><strong>온라인 뉴스 기사:</strong> 주요 언론사 기사 전문</li>
+                    <li><strong>소셜미디어 뉴스:</strong> SNS 플랫폼 뉴스 게시물</li>
+                    <li><strong>메타데이터:</strong> 발행일시, 언론사, 카테고리</li>
+                    <li><strong>감정 분석:</strong> 기사 톤 및 감정 점수</li>
+                    <li><strong>키워드 태깅:</strong> 주요 이슈 및 키워드 추출</li>
+                </ul>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <span style="background: var(--primary-color); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                        일일 평균 5,000건 수집
+                    </span>
+                </div>
+            </div>
+
+            <div class="card" style="background: var(--light-brown); padding: 2rem;">
+                <h3 style="color: var(--secondary-color); text-align: center;">💬 댓글 데이터</h3>
+                <ul style="margin-top: 1rem;">
+                    <li><strong>뉴스 댓글:</strong> 기사별 사용자 댓글 및 반응</li>
+                    <li><strong>소셜미디어 댓글:</strong> 게시물 댓글 및 답글</li>
+                    <li><strong>감정 분석:</strong> 댓글 감정 상태 분석</li>
+                    <li><strong>네트워크 분석:</strong> 사용자 간 상호작용 패턴</li>
+                    <li><strong>토픽 모델링:</strong> 주요 논의 주제 추출</li>
+                </ul>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <span style="background: var(--secondary-color); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                        일일 평균 50,000건 수집
+                    </span>
+                </div>
+            </div>
+
+            <div class="card" style="background: var(--light-brown); padding: 2rem;">
+                <h3 style="color: var(--accent-color); text-align: center;">🖼️ 이미지 데이터</h3>
+                <ul style="margin-top: 1rem;">
+                    <li><strong>뉴스 이미지:</strong> 기사 첨부 이미지 및 사진</li>
+                    <li><strong>소셜미디어 이미지:</strong> SNS 게시 이미지</li>
+                    <li><strong>시각적 분석:</strong> 객체 인식 및 장면 분석</li>
+                    <li><strong>메타데이터:</strong> 촬영 정보 및 위치 데이터</li>
+                    <li><strong>이미지 분류:</strong> 주제별 자동 분류</li>
+                </ul>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <span style="background: var(--accent-color); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                        일일 평균 2,000건 수집
+                    </span>
+                </div>
+            </div>
+
+            <div class="card" style="background: var(--light-brown); padding: 2rem;">
+                <h3 style="color: var(--dark-red); text-align: center;">🎥 영상 데이터</h3>
+                <ul style="margin-top: 1rem;">
+                    <li><strong>뉴스 영상:</strong> TV 뉴스 및 온라인 동영상</li>
+                    <li><strong>소셜미디어 영상:</strong> 플랫폼별 동영상 콘텐츠</li>
+                    <li><strong>음성 분석:</strong> 음성 텍스트 변환 및 분석</li>
+                    <li><strong>영상 분석:</strong> 장면 전환 및 객체 추적</li>
+                    <li><strong>감정 분석:</strong> 화자 감정 및 톤 분석</li>
+                </ul>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <span style="background: var(--dark-red); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                        일일 평균 500건 수집
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 데이터 활용 안내 -->
+    <div class="card" style="background: #E8F5E8; border: 1px solid #4CAF50;">
+        <h2 class="card-title" style="color: #2E7D32;">📊 데이터 활용 안내</h2>
+        <div class="grid grid-2">
+            <div>
+                <h4>활용 가능한 연구 분야</h4>
+                <ul style="color: #2E7D32;">
+                    <li><strong>미디어 연구:</strong> 뉴스 프레이밍, 의제 설정 분석</li>
+                    <li><strong>정치 연구:</strong> 여론 변화, 정치적 극화 분석</li>
+                    <li><strong>사회학 연구:</strong> 사회 갈등, 집단 행동 분석</li>
+                    <li><strong>심리학 연구:</strong> 감정 분석, 인지 편향 연구</li>
+                    <li><strong>경제학 연구:</strong> 시장 심리, 소비자 행동 분석</li>
+                    <li><strong>언어학 연구:</strong> 언어 변화, 담화 분석</li>
+                </ul>
+            </div>
+            <div>
+                <h4>제공 데이터 형태</h4>
+                <ul style="color: #2E7D32;">
+                    <li><strong>원시 데이터:</strong> 수집된 원본 데이터</li>
+                    <li><strong>전처리 데이터:</strong> 정제 및 구조화된 데이터</li>
+                    <li><strong>분석 결과:</strong> 기본 분석이 완료된 데이터</li>
+                    <li><strong>메타데이터:</strong> 데이터 수집 및 처리 정보</li>
+                    <li><strong>API 접근:</strong> 실시간 데이터 접근</li>
+                    <li><strong>맞춤형 데이터셋:</strong> 연구 목적별 특화 데이터</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 데이터 신청 절차 -->
+    <div class="card">
+        <h2 class="card-title">데이터 신청 절차</h2>
+        <div class="grid grid-4" style="text-align: center;">
+            <div class="card" style="padding: 1.5rem; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+                <h3>1단계</h3>
+                <div style="font-size: 2rem; margin: 1rem 0;">📝</div>
+                <h4>신청서 작성</h4>
+                <p style="font-size: 0.9rem;">연구 목적 및 필요 데이터 명시</p>
+            </div>
+            <div class="card" style="padding: 1.5rem; background: linear-gradient(135deg, var(--secondary-color), var(--dark-red)); color: white;">
+                <h3>2단계</h3>
+                <div style="font-size: 2rem; margin: 1rem 0;">🔍</div>
+                <h4>검토 및 승인</h4>
+                <p style="font-size: 0.9rem;">연구윤리 및 데이터 적합성 검토</p>
+            </div>
+            <div class="card" style="padding: 1.5rem; background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); color: white;">
+                <h3>3단계</h3>
+                <div style="font-size: 2rem; margin: 1rem 0;">🤝</div>
+                <h4>협약 체결</h4>
+                <p style="font-size: 0.9rem;">데이터 사용 및 보안 협약</p>
+            </div>
+            <div class="card" style="padding: 1.5rem; background: linear-gradient(135deg, var(--dark-red), var(--secondary-color)); color: white;">
+                <h3>4단계</h3>
+                <div style="font-size: 2rem; margin: 1rem 0;">📦</div>
+                <h4>데이터 제공</h4>
+                <p style="font-size: 0.9rem;">안전한 방법으로 데이터 전달</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 연구윤리 및 보안 -->
+    <div class="card" style="background: #FFF3E0; border: 1px solid #FF9800;">
+        <h2 class="card-title" style="color: #F57C00;">🔒 연구윤리 및 보안</h2>
+        <div class="grid grid-2">
+            <div>
+                <h4>데이터 보안 정책</h4>
+                <ul style="color: #F57C00;">
+                    <li>개인정보 비식별화 처리</li>
+                    <li>암호화된 전송 및 저장</li>
+                    <li>접근 권한 제한 및 감사</li>
+                    <li>데이터 보존 및 폐기 정책</li>
+                    <li>보안 취약점 정기 점검</li>
+                </ul>
+            </div>
+            <div>
+                <h4>연구윤리 준수</h4>
+                <ul style="color: #F57C00;">
+                    <li>IRB(생명윤리위원회) 승인</li>
+                    <li>연구 목적 외 사용 금지</li>
+                    <li>데이터 재배포 제한</li>
+                    <li>연구 결과 공개 시 인용 필수</li>
+                    <li>정기적인 사용 현황 보고</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 신청 및 문의 -->
+    <div class="card" style="background: linear-gradient(135deg, var(--light-brown), #F5E6D3); border: 2px solid var(--primary-color);">
+        <h2 class="card-title" style="color: var(--primary-color);">데이터 신청 및 문의</h2>
+        <div class="grid grid-2">
+            <div>
+                <h4>신청 방법</h4>
+                <ol>
+                    <li>데이터 신청서 다운로드 및 작성</li>
+                    <li>연구계획서 및 IRB 승인서 첨부</li>
+                    <li>이메일 또는 방문 신청</li>
+                    <li>검토 및 승인 과정 (3-5일 소요)</li>
+                    <li>데이터 사용 협약 체결</li>
+                </ol>
+
+                <h4 style="margin-top: 2rem;">제공 비용</h4>
+                <ul>
+                    <li><strong>기본 데이터셋:</strong> 무료</li>
+                    <li><strong>전처리 데이터:</strong> 실비 (5-10만원)</li>
+                    <li><strong>맞춤형 데이터:</strong> 별도 협의</li>
+                    <li><em>* 학술 연구 목적은 우대</em></li>
+                </ul>
+            </div>
+            <div>
+                <h4>문의처</h4>
+                <table class="table">
+                    <tr>
+                        <td><strong>담당자</strong></td>
+                        <td>이문혁 학술연구교수</td>
+                    </tr>
+                    <tr>
+                        <td><strong>이메일</strong></td>
+                        <td>data@hssdi.ac.kr</td>
+                    </tr>
+                    <tr>
+                        <td><strong>전화</strong></td>
+                        <td>031-201-3115</td>
+                    </tr>
+                    <tr>
+                        <td><strong>위치</strong></td>
+                        <td>경희대 제2법학관 1층</td>
+                    </tr>
+                    <tr>
+                        <td><strong>상담시간</strong></td>
+                        <td>평일 09:00-18:00</td>
+                    </tr>
+                </table>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="mailto:data@hssdi.ac.kr" class="btn btn-primary">데이터 신청하기</a>
+                    <a href="/board/" class="btn btn-outline" style="margin-left: 1rem;">관련 공지사항</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/" class="btn btn-outline">홈으로 돌아가기</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 카드 애니메이션
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        }, index * 150);
+    });
+});
+
+// 프로세스 단계 하이라이트
+document.addEventListener('DOMContentLoaded', function() {
+    const processCards = document.querySelectorAll('.grid-4 .card');
+
+    processCards.forEach((card, index) => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.zIndex = '10';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.zIndex = '1';
+        });
+    });
+});
+
+// 통계 카운터 애니메이션
+document.addEventListener('DOMContentLoaded', function() {
+    const counters = document.querySelectorAll('[style*="background: var(--primary-color)"], [style*="background: var(--secondary-color)"], [style*="background: var(--accent-color)"], [style*="background: var(--dark-red)"]');
+
+    counters.forEach(counter => {
+        if (counter.textContent.includes('건')) {
+            counter.style.animation = 'pulse 3s infinite';
+        }
+    });
+});
+
+// CSS 애니메이션 추가
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    .grid-4 .card {
+        transition: transform 0.3s ease, z-index 0.3s ease;
+        cursor: pointer;
+    }
+
+    .table tr:hover {
+        background-color: var(--light-gray);
+        transition: background-color 0.3s ease;
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

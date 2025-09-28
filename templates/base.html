@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}인문·사회과학 데이터 연구소 (HSSDI){% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="/" class="logo">HSSDI</a>
+            <nav class="nav">
+                <a href="/">홈</a>
+                <a href="/about">연구소 소개</a>
+                <a href="/education">데이터 교육</a>
+                <a href="/dashboard">대시보드</a>
+                <a href="/board">게시판</a>
+                <a href="/crudadmin">관리자</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>인문·사회과학 데이터 연구소</h3>
+                    <p>Humanity & Social Science Data Institute (HSSDI)</p>
+                    <p>데이터 기반 연구를 통해 사회가 직면한 복합적 문제를 해결하는 연구 허브</p>
+                </div>
+                <div class="footer-section">
+                    <h3>연락처</h3>
+                    <p>소장: 이훈 (미디어학과 교수)</p>
+                    <p>학술연구교수: 이문혁</p>
+                    <p>위치: 경희대 제2법학관 1층</p>
+                </div>
+                <div class="footer-section">
+                    <h3>연구팀</h3>
+                    <p>텍스트 및 음성 분석팀</p>
+                    <p>영상 및 이미지 분석팀</p>
+                    <p>정형 데이터 분석팀</p>
+                    <p>AI 기반 정책 연구팀</p>
+                    <p>교육 및 협력팀</p>
+                </div>
+            </div>
+            <p>&copy; 2025 경희대학교 인문·사회과학 데이터 연구소. All rights reserved.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

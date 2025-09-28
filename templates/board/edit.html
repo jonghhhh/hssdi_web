@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}게시물 수정 - 게시판{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>게시물 수정</h1>
+        <p>기존 게시물을 수정해주세요</p>
+    </section>
+
+    <div class="card">
+        <form method="POST" action="/board/{{ post.id }}/edit">
+            <div class="form-group">
+                <label class="form-label" for="title">제목 *</label>
+                <input type="text" id="title" name="title" class="form-control" required
+                       value="{{ post.title }}" placeholder="게시물 제목을 입력하세요">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="category_id">카테고리</label>
+                <select id="category_id" name="category_id" class="form-control">
+                    <option value="">카테고리 선택 (선택사항)</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}"
+                            {% if post.category_id == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="content">내용 *</label>
+                <textarea id="content" name="content" class="form-control" rows="15" required
+                          placeholder="게시물 내용을 입력하세요">{{ post.content }}</textarea>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary">수정 완료</button>
+                <a href="/board/{{ post.id }}" class="btn btn-outline" style="margin-left: 1rem;">취소</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- 수정 가이드 -->
+    <div class="card">
+        <h3 class="card-title">수정 가이드</h3>
+        <div class="grid grid-2">
+            <div>
+                <h4 style="color: var(--primary-color);">수정 시 주의사항</h4>
+                <ul>
+                    <li>제목과 내용은 필수 입력 항목입니다</li>
+                    <li>수정된 내용은 즉시 반영됩니다</li>
+                    <li>수정 시간이 기록됩니다</li>
+                    <li>신중하게 수정해주세요</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: var(--secondary-color);">작성 요령</h4>
+                <ul>
+                    <li>명확하고 구체적인 제목으로 수정</li>
+                    <li>내용을 체계적으로 정리</li>
+                    <li>적절한 카테고리 선택</li>
+                    <li>마크다운 문법 활용 가능</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게시물 정보 -->
+    <div class="card">
+        <h3 class="card-title">게시물 정보</h3>
+        <table class="table">
+            <tr>
+                <td><strong>작성자</strong></td>
+                <td>{{ post.author.full_name or post.author.username }}</td>
+            </tr>
+            <tr>
+                <td><strong>작성일</strong></td>
+                <td>{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% if post.updated_at %}
+            <tr>
+                <td><strong>최종 수정</strong></td>
+                <td>{{ post.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td><strong>조회수</strong></td>
+                <td>{{ post.views }}</td>
+            </tr>
+            <tr>
+                <td><strong>카테고리</strong></td>
+                <td>{{ post.category.name if post.category else '미분류' }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 자동 저장 기능
+let autoSaveTimer;
+const titleInput = document.getElementById('title');
+const contentTextarea = document.getElementById('content');
+
+function autoSave() {
+    const title = titleInput.value;
+    const content = contentTextarea.value;
+
+    if (title || content) {
+        localStorage.setItem('edit_draft_title', title);
+        localStorage.setItem('edit_draft_content', content);
+        console.log('수정 내용이 임시 저장되었습니다.');
+    }
+}
+
+// 입력할 때마다 자동 저장 (3초 후)
+[titleInput, contentTextarea].forEach(element => {
+    element.addEventListener('input', function() {
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(autoSave, 3000);
+    });
+});
+
+// 폼 제출 시 임시 저장 데이터 삭제
+document.querySelector('form').addEventListener('submit', function() {
+    localStorage.removeItem('edit_draft_title');
+    localStorage.removeItem('edit_draft_content');
+});
+
+// 텍스트 에리어 자동 높이 조절
+contentTextarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
+
+// 페이지 나가기 전 확인
+window.addEventListener('beforeunload', function(e) {
+    const originalTitle = '{{ post.title }}';
+    const originalContent = `{{ post.content }}`;
+
+    if (titleInput.value !== originalTitle || contentTextarea.value !== originalContent) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+</script>
+{% endblock %}

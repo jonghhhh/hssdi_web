@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}게시물 관리 - 관리자{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>게시물 관리</h1>
+        <p>전체 게시물 조회, 수정, 삭제</p>
+    </section>
+
+    <!-- 검색 및 필터 -->
+    <div class="card">
+        <form method="GET" style="display: flex; gap: 1rem; align-items: end;">
+            <div class="form-group" style="flex: 1;">
+                <label class="form-label">검색어</label>
+                <input type="text" name="search" class="form-control" placeholder="제목 또는 내용을 입력하세요" value="{{ search_query or '' }}">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">검색</button>
+            </div>
+        </form>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+            <p style="color: var(--gray);">총 {{ posts|length }}개의 게시물</p>
+            <a href="/board/create" class="btn btn-secondary">새 게시물 작성</a>
+        </div>
+    </div>
+
+    <!-- 게시물 목록 -->
+    <div class="card">
+        {% if posts %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">ID</th>
+                        <th>제목</th>
+                        <th style="width: 120px;">작성자</th>
+                        <th style="width: 120px;">카테고리</th>
+                        <th style="width: 100px;">작성일</th>
+                        <th style="width: 80px;">조회수</th>
+                        <th style="width: 100px;">상태</th>
+                        <th style="width: 150px;">관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr>
+                        <td>{{ post.id }}</td>
+                        <td>
+                            <a href="/board/{{ post.id }}" style="color: var(--primary-color); text-decoration: none;">
+                                {{ post.title }}
+                            </a>
+                        </td>
+                        <td>{{ post.author.full_name or post.author.username }}</td>
+                        <td>
+                            {% if post.category %}
+                            <span style="background: var(--light-brown); color: var(--primary-color); padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">{{ post.category.name }}</span>
+                            {% else %}
+                            <span style="color: var(--gray);">미분류</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ post.views }}</td>
+                        <td>
+                            {% if post.is_published %}
+                            <span style="background: #4CAF50; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">공개</span>
+                            {% else %}
+                            <span style="background: #FF9800; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">비공개</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="/board/{{ post.id }}/edit" class="btn btn-outline" style="font-size: 0.8rem; padding: 0.3rem 0.6rem;">수정</a>
+                            <button onclick="deletePost({{ post.id }})" class="btn" style="background-color: var(--danger); color: white; font-size: 0.8rem; padding: 0.3rem 0.6rem;">삭제</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- 페이지네이션 -->
+            <div style="text-align: center; margin-top: 2rem;">
+                {% if current_page > 1 %}
+                <a href="?page={{ current_page - 1 }}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">이전</a>
+                {% endif %}
+
+                <span style="margin: 0 1rem;">페이지 {{ current_page }}</span>
+
+                <a href="?page={{ current_page + 1 }}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">다음</a>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 3rem;">
+                <h3 style="color: var(--gray);">게시물이 없습니다</h3>
+                <p>검색 조건을 변경하거나 새 게시물을 작성해보세요.</p>
+                <a href="/board/create" class="btn btn-primary">게시물 작성</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/admin/dashboard" class="btn btn-outline">관리자 대시보드</a>
+    </div>
+</div>
+
+<!-- 삭제 확인 폼들 -->
+{% for post in posts %}
+<form id="deleteForm{{ post.id }}" method="POST" action="/admin/posts/{{ post.id }}/delete" style="display: none;"></form>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+function deletePost(postId) {
+    if (confirm('정말로 이 게시물을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+        document.getElementById('deleteForm' + postId).submit();
+    }
+}
+
+// 표 행 호버 효과
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.table tbody tr');
+    rows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'var(--light-gray)';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}대시보드 - 인문·사회과학 데이터 연구소{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>연구소 대시보드</h1>
+        <p>실시간 연구 현황 및 데이터 통계</p>
+    </section>
+
+    <!-- 통계 카드 -->
+    <section class="stats">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.posts }}</div>
+            <div class="stat-label">게시물</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.research }}</div>
+            <div class="stat-label">연구 프로젝트</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.news }}</div>
+            <div class="stat-label">뉴스</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.users }}</div>
+            <div class="stat-label">사용자</div>
+        </div>
+    </section>
+
+    <div class="grid grid-2">
+        <!-- 최근 게시물 -->
+        <div class="card">
+            <h2 class="card-title">최근 게시물</h2>
+            {% if recent_posts %}
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>제목</th>
+                                <th>작성일</th>
+                                <th>조회수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in recent_posts %}
+                            <tr>
+                                <td><a href="/board/{{ post.id }}" style="color: var(--primary-color); text-decoration: none;">{{ post.title[:50] }}{% if post.title|length > 50 %}...{% endif %}</a></td>
+                                <td>{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ post.views }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>게시물이 없습니다.</p>
+            {% endif %}
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="/board" class="btn btn-outline">전체 게시물 보기</a>
+            </div>
+        </div>
+
+        <!-- 최근 연구 -->
+        <div class="card">
+            <h2 class="card-title">진행 중인 연구</h2>
+            {% if recent_research %}
+                {% for research in recent_research %}
+                <div style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin-bottom: 1rem;">
+                    <h4 style="color: var(--primary-color);">{{ research.title }}</h4>
+                    <p>{{ research.description[:100] if research.description else '설명 없음' }}{% if research.description and research.description|length > 100 %}...{% endif %}</p>
+                    <small style="color: var(--gray);">상태: {{ research.status }} | 유형: {{ research.research_type or '미분류' }}</small>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>진행 중인 연구가 없습니다.</p>
+            {% endif %}
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="/dashboard/research" class="btn btn-outline">연구 현황 보기</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 최신 뉴스 -->
+    <div class="card">
+        <h2 class="card-title">주요 뉴스</h2>
+        {% if latest_news %}
+            <div class="grid grid-3">
+                {% for news in latest_news %}
+                <div class="card" style="background: linear-gradient(135deg, var(--secondary-color), var(--dark-red)); color: white;">
+                    <h4>{{ news.title }}</h4>
+                    <p>{{ news.content[:150] }}{% if news.content|length > 150 %}...{% endif %}</p>
+                    <small>{{ news.published_at.strftime('%Y-%m-%d') if news.published_at else news.created_at.strftime('%Y-%m-%d') }}</small>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>등록된 뉴스가 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <!-- 빠른 링크 -->
+    <div class="grid grid-4" style="margin-top: 2rem;">
+        <a href="/dashboard/analytics" class="btn btn-primary" style="text-align: center; padding: 2rem;">
+            📊<br>분석 리포트
+        </a>
+        <a href="/dashboard/research" class="btn btn-secondary" style="text-align: center; padding: 2rem;">
+            🔬<br>연구 현황
+        </a>
+        <a href="/board/create" class="btn btn-outline" style="text-align: center; padding: 2rem;">
+            ✏️<br>게시물 작성
+        </a>
+        <a href="/crudadmin" class="btn btn-outline" style="text-align: center; padding: 2rem;">
+            ⚙️<br>관리자 패널
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // 실시간 업데이트 (5분마다)
+    setInterval(function() {
+        location.reload();
+    }, 300000);
+
+    // 통계 카드 애니메이션
+    document.addEventListener('DOMContentLoaded', function() {
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach(stat => {
+            const finalValue = parseInt(stat.textContent);
+            let currentValue = 0;
+            const increment = finalValue / 50;
+
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= finalValue) {
+                    currentValue = finalValue;
+                    clearInterval(timer);
+                }
+                stat.textContent = Math.floor(currentValue);
+            }, 20);
+        });
+    });
+</script>
+{% endblock %}

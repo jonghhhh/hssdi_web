@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}분석 리포트 - 인문·사회과학 데이터 연구소{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>분석 리포트</h1>
+        <p>데이터 활용 현황 및 통계 분석</p>
+    </section>
+
+    <!-- 월별 게시물 통계 -->
+    <div class="card">
+        <h2 class="card-title">월별 게시물 현황</h2>
+        {% if monthly_data %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>월</th>
+                        <th>게시물 수</th>
+                        <th>비율</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set total = monthly_data | sum(attribute='count') %}
+                    {% for data in monthly_data %}
+                    <tr>
+                        <td>{{ data.month }}</td>
+                        <td>{{ data.count }}</td>
+                        <td>
+                            <div style="background: var(--light-gray); border-radius: 5px; overflow: hidden;">
+                                <div style="background: var(--primary-color); height: 20px; width: {{ (data.count / total * 100) if total > 0 else 0 }}%; color: white; text-align: center; line-height: 20px; font-size: 0.8rem;">
+                                    {{ "%.1f"|format(data.count / total * 100 if total > 0 else 0) }}%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>월별 데이터가 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <!-- 주요 지표 -->
+    <div class="grid grid-4">
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+            <h3>데이터 수집</h3>
+            <div style="font-size: 2rem; margin: 1rem 0;">📊</div>
+            <p>다양한 소스에서 데이터를 체계적으로 수집하고 있습니다</p>
+        </div>
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--secondary-color), var(--dark-red)); color: white;">
+            <h3>AI 분석</h3>
+            <div style="font-size: 2rem; margin: 1rem 0;">🤖</div>
+            <p>머신러닝과 AI를 활용한 고도화된 분석을 수행합니다</p>
+        </div>
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); color: white;">
+            <h3>시각화</h3>
+            <div style="font-size: 2rem; margin: 1rem 0;">📈</div>
+            <p>복잡한 데이터를 이해하기 쉬운 시각적 형태로 변환합니다</p>
+        </div>
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--dark-red), var(--secondary-color)); color: white;">
+            <h3>정책 제안</h3>
+            <div style="font-size: 2rem; margin: 1rem 0;">💡</div>
+            <p>분석 결과를 바탕으로 실질적인 정책 대안을 제시합니다</p>
+        </div>
+    </div>
+
+    <!-- ATLAS 시스템 현황 -->
+    <div class="card">
+        <h2 class="card-title">ATLAS 시스템 분석 현황</h2>
+        <div class="grid grid-2">
+            <div>
+                <h4 style="color: var(--primary-color);">데이터 처리 파이프라인</h4>
+                <ul style="margin-top: 1rem;">
+                    <li><strong>실시간 수집:</strong> 소셜미디어, 뉴스, 정부 데이터</li>
+                    <li><strong>전처리:</strong> 데이터 정제 및 표준화</li>
+                    <li><strong>분석:</strong> LLM 기반 감성분석, 이슈 추출</li>
+                    <li><strong>저장:</strong> 구조화된 데이터베이스 저장</li>
+                    <li><strong>시각화:</strong> 대시보드 및 리포트 생성</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: var(--secondary-color);">분석 지표</h4>
+                <table class="table">
+                    <tr>
+                        <td>일 평균 처리량</td>
+                        <td>1,000+ 문서</td>
+                    </tr>
+                    <tr>
+                        <td>분석 정확도</td>
+                        <td>95.2%</td>
+                    </tr>
+                    <tr>
+                        <td>응답 시간</td>
+                        <td>< 2초</td>
+                    </tr>
+                    <tr>
+                        <td>데이터 커버리지</td>
+                        <td>한국어 98%</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 연구 성과 -->
+    <div class="card">
+        <h2 class="card-title">주요 연구 성과</h2>
+        <div class="grid grid-3">
+            <div style="border-left: 4px solid var(--primary-color); padding-left: 1rem;">
+                <h4>소셜미디어 여론 분석</h4>
+                <p>정치·사회 이슈에 대한 국민 여론 변화 패턴을 실시간으로 분석하여 정책 결정에 활용</p>
+                <small style="color: var(--gray);">진행률: 85%</small>
+            </div>
+            <div style="border-left: 4px solid var(--secondary-color); padding-left: 1rem;">
+                <h4>가짜뉴스 탐지 시스템</h4>
+                <p>AI 기반 자동 탐지 시스템으로 허위정보 확산을 실시간으로 모니터링</p>
+                <small style="color: var(--gray);">진행률: 70%</small>
+            </div>
+            <div style="border-left: 4px solid var(--accent-color); padding-left: 1rem;">
+                <h4>정책 효과 측정</h4>
+                <p>데이터 분석을 통한 정부 정책의 정량적 효과 측정 및 개선 방안 도출</p>
+                <small style="color: var(--gray);">진행률: 60%</small>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/dashboard" class="btn btn-outline">대시보드로 돌아가기</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 차트 애니메이션 효과
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('[style*="width:"]');
+
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+
+        setTimeout(() => {
+            bar.style.transition = 'width 1s ease-in-out';
+            bar.style.width = width;
+        }, 500);
+    });
+});
+</script>
+{% endblock %}

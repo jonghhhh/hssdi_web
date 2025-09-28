@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - 게시판{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid var(--light-gray); padding-bottom: 1rem;">
+            <div>
+                <h1 style="color: var(--primary-color); margin-bottom: 0.5rem;">{{ post.title }}</h1>
+                <div style="color: var(--gray);">
+                    <span>작성자: {{ post.author.full_name or post.author.username }}</span>
+                    <span style="margin: 0 1rem;">|</span>
+                    <span>작성일: {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    <span style="margin: 0 1rem;">|</span>
+                    <span>조회수: {{ post.views }}</span>
+                    {% if post.category %}
+                    <span style="margin: 0 1rem;">|</span>
+                    <span style="background: var(--light-brown); color: var(--primary-color); padding: 0.2rem 0.5rem; border-radius: 3px;">{{ post.category.name }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <a href="/board" class="btn btn-outline">목록으로</a>
+            </div>
+        </div>
+
+        <div style="line-height: 1.8; margin-bottom: 3rem;">
+            {{ post.content | replace('\n', '<br>') | safe }}
+        </div>
+
+        {% if post.updated_at and post.updated_at != post.created_at %}
+        <div style="border-top: 1px solid var(--light-gray); padding-top: 1rem; color: var(--gray); font-size: 0.9rem;">
+            최종 수정: {{ post.updated_at.strftime('%Y-%m-%d %H:%M') }}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 작성자 또는 관리자인 경우 수정/삭제 버튼 -->
+    <div class="card" style="text-align: center;">
+        <a href="/board/{{ post.id }}/edit" class="btn btn-secondary">수정</a>
+        <button onclick="confirmDelete()" class="btn" style="background-color: var(--danger); color: white; margin-left: 1rem;">삭제</button>
+    </div>
+
+    <!-- 이전/다음 게시물 네비게이션 -->
+    <div class="grid grid-2">
+        <div class="card">
+            <h4>이전 게시물</h4>
+            <p style="color: var(--gray);">이전 게시물이 없습니다</p>
+        </div>
+        <div class="card">
+            <h4>다음 게시물</h4>
+            <p style="color: var(--gray);">다음 게시물이 없습니다</p>
+        </div>
+    </div>
+</div>
+
+<!-- 삭제 확인 폼 (숨김) -->
+<form id="deleteForm" method="POST" action="/board/{{ post.id }}/delete" style="display: none;"></form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmDelete() {
+    if (confirm('정말로 이 게시물을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+        document.getElementById('deleteForm').submit();
+    }
+}
+
+// 게시물 내용 코드 하이라이팅 (간단한 예시)
+document.addEventListener('DOMContentLoaded', function() {
+    const content = document.querySelector('.content');
+    if (content) {
+        // 코드 블록 스타일링
+        const codeBlocks = content.querySelectorAll('code');
+        codeBlocks.forEach(block => {
+            block.style.background = 'var(--light-gray)';
+            block.style.padding = '0.2rem 0.4rem';
+            block.style.borderRadius = '3px';
+            block.style.fontFamily = 'monospace';
+        });
+    }
+});
+</script>
+{% endblock %}

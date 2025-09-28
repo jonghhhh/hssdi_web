@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}연구 현황 - 인문·사회과학 데이터 연구소{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>연구 현황</h1>
+        <p>진행 중인 연구 프로젝트 및 통계</p>
+    </section>
+
+    <div class="grid grid-2">
+        <!-- 연구팀별 통계 -->
+        <div class="card">
+            <h2 class="card-title">연구팀별 현황</h2>
+            {% if research_stats %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>연구팀</th>
+                            <th>프로젝트 수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in research_stats %}
+                        <tr>
+                            <td>{{ stat.research_type or '미분류' }}</td>
+                            <td>{{ stat.count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>연구 데이터가 없습니다.</p>
+            {% endif %}
+        </div>
+
+        <!-- 진행 상태별 통계 -->
+        <div class="card">
+            <h2 class="card-title">진행 상태별 현황</h2>
+            {% if status_stats %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>상태</th>
+                            <th>프로젝트 수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in status_stats %}
+                        <tr>
+                            <td>
+                                <span style="background:
+                                    {% if stat.status == '진행중' %}var(--primary-color)
+                                    {% elif stat.status == '완료' %}var(--success)
+                                    {% elif stat.status == '계획' %}var(--warning)
+                                    {% else %}var(--gray){% endif %};
+                                    color: white; padding: 0.2rem 0.5rem; border-radius: 3px;">
+                                    {{ stat.status }}
+                                </span>
+                            </td>
+                            <td>{{ stat.count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>상태 데이터가 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 class="card-title">연구팀 소개</h2>
+        <div class="grid grid-2">
+            <div style="border-left: 4px solid var(--primary-color); padding-left: 1rem;">
+                <h4>텍스트 및 음성 분석팀</h4>
+                <p>자연어 처리, 감성 분석, 음성 인식 기술을 활용한 소셜미디어 및 뉴스 데이터 분석</p>
+            </div>
+            <div style="border-left: 4px solid var(--secondary-color); padding-left: 1rem;">
+                <h4>영상 및 이미지 분석팀</h4>
+                <p>컴퓨터 비전, 딥러닝을 통한 시각 콘텐츠 분석 및 사회 트렌드 파악</p>
+            </div>
+            <div style="border-left: 4px solid var(--accent-color); padding-left: 1rem;">
+                <h4>정형 데이터 분석팀</h4>
+                <p>통계 분석, 머신러닝을 통한 정부 정책 데이터 및 경제 지표 분석</p>
+            </div>
+            <div style="border-left: 4px solid var(--dark-red); padding-left: 1rem;">
+                <h4>AI 기반 정책 연구팀</h4>
+                <p>인공지능을 활용한 정책 효과 분석, 예측 모델링 및 정책 제안</p>
+            </div>
+            <div style="border-left: 4px solid var(--light-brown); padding-left: 1rem; grid-column: 1 / -1;">
+                <h4>교육 및 협력팀</h4>
+                <p>데이터 리터러시 교육 프로그램 개발 및 국내외 연구기관과의 협력 네트워크 구축</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/dashboard" class="btn btn-outline">대시보드로 돌아가기</a>
+    </div>
+</div>
+{% endblock %}

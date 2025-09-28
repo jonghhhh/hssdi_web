@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}카테고리 관리 - 관리자{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>카테고리 관리</h1>
+        <p>게시판 카테고리 추가, 수정, 삭제</p>
+    </section>
+
+    <!-- 카테고리 추가 -->
+    <div class="card">
+        <h2 class="card-title">새 카테고리 추가</h2>
+        <form method="POST" action="/admin/categories/add">
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label class="form-label" for="name">카테고리 이름 *</label>
+                    <input type="text" id="name" name="name" class="form-control" required placeholder="카테고리 이름을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="description">설명</label>
+                    <input type="text" id="description" name="description" class="form-control" placeholder="카테고리 설명 (선택사항)">
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn btn-primary">카테고리 추가</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 기존 카테고리 목록 -->
+    <div class="card">
+        <h2 class="card-title">기존 카테고리 ({{ categories|length }}개)</h2>
+        {% if categories %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">ID</th>
+                        <th>이름</th>
+                        <th>설명</th>
+                        <th style="width: 120px;">생성일</th>
+                        <th style="width: 100px;">관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                    <tr>
+                        <td>{{ category.id }}</td>
+                        <td>
+                            <strong style="color: var(--primary-color);">{{ category.name }}</strong>
+                        </td>
+                        <td>{{ category.description or '-' }}</td>
+                        <td>{{ category.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <button onclick="deleteCategory({{ category.id }}, '{{ category.name }}')" class="btn" style="background-color: var(--danger); color: white; font-size: 0.8rem; padding: 0.3rem 0.6rem;">삭제</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 3rem;">
+                <h3 style="color: var(--gray);">카테고리가 없습니다</h3>
+                <p>첫 번째 카테고리를 추가해보세요!</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- 카테고리 사용 통계 -->
+    <div class="card">
+        <h2 class="card-title">카테고리별 게시물 현황</h2>
+        <div class="grid grid-3">
+            {% for category in categories %}
+            <div style="text-align: center; padding: 1rem; background: var(--light-gray); border-radius: 5px;">
+                <h4 style="color: var(--primary-color);">{{ category.name }}</h4>
+                <div style="font-size: 1.5rem; margin: 0.5rem 0; color: var(--secondary-color);">
+                    <!-- 게시물 수는 실제 구현 시 추가 -->
+                    0개
+                </div>
+                <p style="font-size: 0.9rem; color: var(--gray);">게시물</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 주의사항 -->
+    <div class="card" style="background: #FFF3CD; border: 1px solid #FFEAA7;">
+        <h3 class="card-title" style="color: #856404;">⚠️ 주의사항</h3>
+        <ul style="color: #856404;">
+            <li>카테고리를 삭제하면 해당 카테고리에 속한 게시물들은 '미분류'로 변경됩니다.</li>
+            <li>카테고리 이름은 중복될 수 없습니다.</li>
+            <li>시스템에서 사용 중인 카테고리는 신중하게 삭제하세요.</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/admin/dashboard" class="btn btn-outline">관리자 대시보드</a>
+        <a href="/admin/posts" class="btn btn-outline" style="margin-left: 1rem;">게시물 관리</a>
+    </div>
+</div>
+
+<!-- 삭제 확인 폼들 -->
+{% for category in categories %}
+<form id="deleteForm{{ category.id }}" method="POST" action="/admin/categories/{{ category.id }}/delete" style="display: none;"></form>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+function deleteCategory(categoryId, categoryName) {
+    if (confirm(`정말로 '${categoryName}' 카테고리를 삭제하시겠습니까?\n\n이 카테고리에 속한 게시물들은 '미분류'로 변경됩니다.`)) {
+        document.getElementById('deleteForm' + categoryId).submit();
+    }
+}
+
+// 폼 유효성 검사
+document.querySelector('form[action="/admin/categories/add"]').addEventListener('submit', function(e) {
+    const name = document.getElementById('name').value.trim();
+    if (!name) {
+        e.preventDefault();
+        alert('카테고리 이름을 입력해주세요.');
+        document.getElementById('name').focus();
+        return;
+    }
+
+    if (name.length > 50) {
+        e.preventDefault();
+        alert('카테고리 이름은 50자 이내로 입력해주세요.');
+        document.getElementById('name').focus();
+        return;
+    }
+});
+
+// 표 행 호버 효과
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.table tbody tr');
+    rows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'var(--light-brown)';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+});
+</script>
+{% endblock %}

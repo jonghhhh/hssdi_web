@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}사용자 관리 - 관리자{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>사용자 관리</h1>
+        <p>시스템 사용자 계정 및 권한 관리</p>
+    </section>
+
+    <!-- 사용자 통계 -->
+    <div class="grid grid-3">
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+            <h3>전체 사용자</h3>
+            <div style="font-size: 2rem; margin: 1rem 0;">{{ users|length }}</div>
+            <p>등록된 사용자 수</p>
+        </div>
+
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--secondary-color), var(--dark-red)); color: white;">
+            <h3>관리자</h3>
+            <div style="font-size: 2rem; margin: 1rem 0;">
+                {{ users|selectattr('is_admin')|list|length }}
+            </div>
+            <p>관리자 권한 사용자</p>
+        </div>
+
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); color: white;">
+            <h3>활성 사용자</h3>
+            <div style="font-size: 2rem; margin: 1rem 0;">
+                {{ users|selectattr('is_active')|list|length }}
+            </div>
+            <p>활성화된 계정</p>
+        </div>
+    </div>
+
+    <!-- 사용자 목록 -->
+    <div class="card">
+        <h2 class="card-title">사용자 목록</h2>
+        {% if users %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">ID</th>
+                        <th>사용자명</th>
+                        <th>이메일</th>
+                        <th>이름</th>
+                        <th style="width: 100px;">관리자</th>
+                        <th style="width: 100px;">활성</th>
+                        <th style="width: 120px;">가입일</th>
+                        <th style="width: 120px;">최종 수정</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>
+                            <strong style="color: var(--primary-color);">{{ user.username }}</strong>
+                        </td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.full_name or '-' }}</td>
+                        <td>
+                            {% if user.is_admin %}
+                            <span style="background: #4CAF50; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">YES</span>
+                            {% else %}
+                            <span style="background: var(--gray); color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">NO</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.is_active %}
+                            <span style="background: #4CAF50; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">활성</span>
+                            {% else %}
+                            <span style="background: #FF5722; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">비활성</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ user.updated_at.strftime('%Y-%m-%d') if user.updated_at else '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 3rem;">
+                <h3 style="color: var(--gray);">사용자가 없습니다</h3>
+                <p>시스템에 등록된 사용자가 없습니다.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- 사용자 역할 안내 -->
+    <div class="card">
+        <h2 class="card-title">사용자 역할 안내</h2>
+        <div class="grid grid-2">
+            <div>
+                <h4 style="color: var(--primary-color);">👑 관리자 (Admin)</h4>
+                <ul>
+                    <li>전체 시스템 관리 권한</li>
+                    <li>게시물 생성, 수정, 삭제</li>
+                    <li>카테고리 관리</li>
+                    <li>사용자 계정 관리</li>
+                    <li>시스템 설정 변경</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: var(--secondary-color);">👤 일반 사용자 (User)</h4>
+                <ul>
+                    <li>자신의 게시물만 작성, 수정</li>
+                    <li>댓글 작성 및 관리</li>
+                    <li>프로필 정보 수정</li>
+                    <li>게시물 조회 및 검색</li>
+                    <li>교육 프로그램 신청</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 계정 보안 정보 -->
+    <div class="card" style="background: #E8F5E8; border: 1px solid #4CAF50;">
+        <h3 class="card-title" style="color: #2E7D32;">🔒 보안 정보</h3>
+        <div class="grid grid-2">
+            <div>
+                <h5>기본 관리자 계정</h5>
+                <table class="table">
+                    <tr>
+                        <td><strong>사용자명:</strong></td>
+                        <td>admin</td>
+                    </tr>
+                    <tr>
+                        <td><strong>기본 비밀번호:</strong></td>
+                        <td>admin123</td>
+                    </tr>
+                    <tr>
+                        <td><strong>권한:</strong></td>
+                        <td>시스템 관리자</td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <h5>보안 권장사항</h5>
+                <ul style="color: #2E7D32;">
+                    <li>정기적인 비밀번호 변경</li>
+                    <li>강력한 비밀번호 사용</li>
+                    <li>불필요한 계정 정리</li>
+                    <li>로그인 기록 모니터링</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/admin/dashboard" class="btn btn-outline">관리자 대시보드</a>
+        <a href="/admin/posts" class="btn btn-outline" style="margin-left: 1rem;">게시물 관리</a>
+        <a href="/admin/categories" class="btn btn-outline" style="margin-left: 1rem;">카테고리 관리</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 표 행 호버 효과
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.table tbody tr');
+    rows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'var(--light-brown)';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+
+    // 관리자 계정 하이라이트
+    const adminRows = document.querySelectorAll('.table tbody tr');
+    adminRows.forEach(row => {
+        const adminCell = row.children[4]; // 관리자 컬럼
+        if (adminCell && adminCell.textContent.includes('YES')) {
+            row.style.borderLeft = '4px solid var(--primary-color)';
+        }
+    });
+});
+
+// 통계 카드 애니메이션
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.grid .card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.transform = 'translateY(0)';
+            card.style.opacity = '1';
+        }, index * 200);
+    });
+});
+</script>
+
+<style>
+.grid .card {
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+</style>
+{% endblock %}

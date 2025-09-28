@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}관리자 대시보드 - 인문·사회과학 데이터 연구소{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>관리자 대시보드</h1>
+                <p>시스템 관리 및 데이터 관리</p>
+            </div>
+            <div>
+                <a href="/admin/logout" class="btn" style="background-color: var(--danger); color: white;">로그아웃</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 통계 카드 -->
+    <div class="grid grid-3">
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white;">
+            <h3>게시물</h3>
+            <div style="font-size: 2.5rem; margin: 1rem 0;">{{ posts_count or 0 }}</div>
+            <p>전체 게시물 수</p>
+            <a href="/admin/posts" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">관리하기</a>
+        </div>
+
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--secondary-color), var(--dark-red)); color: white;">
+            <h3>카테고리</h3>
+            <div style="font-size: 2.5rem; margin: 1rem 0;">{{ categories_count or 0 }}</div>
+            <p>전체 카테고리 수</p>
+            <a href="/admin/categories" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">관리하기</a>
+        </div>
+
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); color: white;">
+            <h3>사용자</h3>
+            <div style="font-size: 2.5rem; margin: 1rem 0;">{{ users_count or 0 }}</div>
+            <p>전체 사용자 수</p>
+            <a href="/admin/users" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">관리하기</a>
+        </div>
+    </div>
+
+    <!-- 관리 메뉴 -->
+    <div class="card">
+        <h2 class="card-title">관리 메뉴</h2>
+        <div class="grid grid-2" style="gap: 1rem;">
+            <a href="/admin/posts" class="btn btn-primary">📝 게시물 관리</a>
+            <a href="/admin/categories" class="btn btn-secondary">📂 카테고리 관리</a>
+            <a href="/admin/users" class="btn btn-outline">👥 사용자 관리</a>
+            <a href="/board/create" class="btn btn-outline">✍️ 새 게시물 작성</a>
+        </div>
+    </div>
+
+    <!-- 최근 게시물 -->
+    {% if recent_posts %}
+    <div class="card">
+        <h2 class="card-title">최근 게시물</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>카테고리</th>
+                    <th>작성일</th>
+                    <th>조회수</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in recent_posts %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>
+                        <a href="/board/{{ post.id }}" style="color: var(--primary-color); text-decoration: none;">
+                            {{ post.title[:50] }}{% if post.title|length > 50 %}...{% endif %}
+                        </a>
+                    </td>
+                    <td>{{ post.author.full_name or post.author.username }}</td>
+                    <td>
+                        {% if post.category %}
+                        <span style="background: var(--light-brown); color: var(--primary-color); padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">
+                            {{ post.category.name }}
+                        </span>
+                        {% else %}
+                        <span style="color: var(--gray);">미분류</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ post.views }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-2">
+        <div class="card">
+            <h2 class="card-title">시스템 정보</h2>
+            <table class="table">
+                <tr>
+                    <td><strong>연구소명</strong></td>
+                    <td>인문·사회과학 데이터 연구소 (HSSDI)</td>
+                </tr>
+                <tr>
+                    <td><strong>소장</strong></td>
+                    <td>이훈 (미디어학과 교수)</td>
+                </tr>
+                <tr>
+                    <td><strong>학술연구교수</strong></td>
+                    <td>이문혁</td>
+                </tr>
+                <tr>
+                    <td><strong>위치</strong></td>
+                    <td>경희대 제2법학관 1층</td>
+                </tr>
+                <tr>
+                    <td><strong>시행일</strong></td>
+                    <td>2025년 8월 28일</td>
+                </tr>
+            </table>
+        </div>
+
+    <div class="card">
+        <h2 class="card-title">연구팀 관리</h2>
+        <div class="grid grid-2">
+            <div style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin-bottom: 1rem;">
+                <h4>텍스트 및 음성 분석팀</h4>
+                <p>자연어 처리, 감성 분석, 음성 인식 기술 활용</p>
+            </div>
+            <div style="border-left: 4px solid var(--secondary-color); padding-left: 1rem; margin-bottom: 1rem;">
+                <h4>영상 및 이미지 분석팀</h4>
+                <p>컴퓨터 비전, 딥러닝 시각 데이터 분석</p>
+            </div>
+            <div style="border-left: 4px solid var(--accent-color); padding-left: 1rem; margin-bottom: 1rem;">
+                <h4>정형 데이터 분석팀</h4>
+                <p>통계 분석, 머신러닝 정형 데이터 처리</p>
+            </div>
+            <div style="border-left: 4px solid var(--dark-red); padding-left: 1rem; margin-bottom: 1rem;">
+                <h4>AI 기반 정책 연구팀</h4>
+                <p>인공지능 활용 정책 효과 분석 및 예측</p>
+            </div>
+            <div style="border-left: 4px solid var(--light-brown); padding-left: 1rem; margin-bottom: 1rem; grid-column: 1 / -1;">
+                <h4>교육 및 협력팀</h4>
+                <p>데이터 리터러시 교육 및 국제 협력 네트워크</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 class="card-title">빠른 액세스</h2>
+        <div class="grid grid-4" style="text-align: center;">
+            <div class="card" style="padding: 1rem;">
+                <h4>📊</h4>
+                <p>통계 대시보드</p>
+                <a href="/dashboard/" class="btn btn-outline">보기</a>
+            </div>
+            <div class="card" style="padding: 1rem;">
+                <h4>📝</h4>
+                <p>게시판 관리</p>
+                <a href="/board/" class="btn btn-outline">보기</a>
+            </div>
+            <div class="card" style="padding: 1rem;">
+                <h4>🔬</h4>
+                <p>연구 현황</p>
+                <a href="/dashboard/research" class="btn btn-outline">보기</a>
+            </div>
+            <div class="card" style="padding: 1rem;">
+                <h4>ℹ️</h4>
+                <p>연구소 정보</p>
+                <a href="/about" class="btn btn-outline">보기</a>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/" class="btn btn-outline">홈으로 돌아가기</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 관리자 패널 통계 업데이트
+document.addEventListener('DOMContentLoaded', function() {
+    // 실시간 시계
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleString('ko-KR');
+        const timeElement = document.getElementById('current-time');
+        if (timeElement) {
+            timeElement.textContent = timeString;
+        }
+    }
+
+    // 시계 추가
+    const hero = document.querySelector('.hero p');
+    if (hero) {
+        hero.innerHTML += '<br><small id="current-time"></small>';
+        updateTime();
+        setInterval(updateTime, 1000);
+    }
+});
+</script>
+{% endblock %}
