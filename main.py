@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Depends, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -9,10 +10,24 @@ import os
 from app.database import get_session, init_db
 from app.routers import admin, dashboard, board
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 시작 시
+    try:
+        await init_db()
+        print("✅ 데이터베이스 초기화 완료")
+    except Exception as e:
+        print(f"❌ 데이터베이스 초기화 실패: {e}")
+        # 개발 환경에서는 에러를 발생시키지 않고 계속 진행
+
+    yield
+    # 종료 시 (정리 작업이 있다면 여기에)
+
 app = FastAPI(
     title="인문·사회과학 데이터 연구소 (HSSDI)",
     description="Humanity & Social Science Data Institute Website",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 

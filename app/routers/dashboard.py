@@ -3,9 +3,10 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
+from sqlalchemy.orm import selectinload
 
 from app.database import get_session
-from app.models import Post, Research, News, User
+from app.models import Post, Research, News, User, Category
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -21,9 +22,12 @@ async def dashboard_home(
     news_count = await session.scalar(select(func.count(News.id)))
     user_count = await session.scalar(select(func.count(User.id)))
 
-    # 최근 게시물
+    # 최근 게시물 - eager loading으로 author와 category 미리 로드
     recent_posts = await session.execute(
-        select(Post).order_by(Post.created_at.desc()).limit(5)
+        select(Post).options(
+            selectinload(Post.author),
+            selectinload(Post.category)
+        ).order_by(Post.created_at.desc()).limit(5)
     )
     recent_posts = recent_posts.scalars().all()
 
@@ -33,9 +37,11 @@ async def dashboard_home(
     )
     recent_research = recent_research.scalars().all()
 
-    # 최신 뉴스
+    # 최신 뉴스 - eager loading으로 author 미리 로드
     latest_news = await session.execute(
-        select(News).where(News.is_featured == True).order_by(News.published_at.desc()).limit(3)
+        select(News).options(
+            selectinload(News.author)
+        ).where(News.is_featured == True).order_by(News.published_at.desc()).limit(3)
     )
     latest_news = latest_news.scalars().all()
 

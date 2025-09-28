@@ -11,7 +11,7 @@ services:
       - key: PYTHON_VERSION
         value: "3.11.9"
       - key: DATABASE_URL
-        value: "sqlite+aiosqlite:///data/hssdi.db"
+        value: "sqlite+aiosqlite:////data/hssdi.db"
       - key: PYTHONPATH
         value: "."
     disks:

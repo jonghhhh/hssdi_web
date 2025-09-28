@@ -116,9 +116,15 @@ async def board_detail(
     # 세션을 닫기 전에 모든 필요한 속성을 미리 로드
     await session.refresh(post)
 
+    # 모든 관계 속성을 명시적으로 로드
+    author_name = post.author.username if post.author else "Unknown"
+    category_name = post.category.name if post.category else "No Category"
+
     return templates.TemplateResponse("board/detail.html", {
         "request": request,
-        "post": post
+        "post": post,
+        "author_name": author_name,
+        "category_name": category_name
     })
 
 @router.get("/{post_id}/edit", response_class=HTMLResponse)
