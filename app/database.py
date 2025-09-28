@@ -7,8 +7,7 @@ Base = declarative_base()
 engine = create_async_engine(
     settings.database_url,
     echo=True,
-    future=True,
-    connect_args={"check_same_thread": False}
+    future=True
 )
 
 SessionLocal = async_sessionmaker(
