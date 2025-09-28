@@ -50,8 +50,12 @@ async def admin_login(
     username: str = Form(...),
     password: str = Form(...)
 ):
-    # 간단한 하드코딩된 관리자 계정 (실제 운영에서는 데이터베이스에서 확인)
-    if username == "admin" and password == "admin123":
+    # 간단한 SHA256 해시 검증
+    import hashlib
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    expected_hash = hashlib.sha256("admin123".encode()).hexdigest()
+
+    if username == "admin" and password_hash == expected_hash:
         request.session["admin_logged_in"] = True
         request.session["admin_username"] = username
         return RedirectResponse(url="/crudadmin", status_code=303)

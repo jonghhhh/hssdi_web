@@ -41,15 +41,15 @@ async def init_db():
         admin_user = result.scalar_one_or_none()
 
         if not admin_user:
-            from passlib.context import CryptContext
-            pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+            import hashlib
 
-            # 관리자 계정 생성
+            # 관리자 계정 생성 (간단한 SHA256 해시 사용)
+            password_hash = hashlib.sha256("admin123".encode()).hexdigest()
             admin_user = User(
                 username="admin",
                 email="admin@hssdi.ac.kr",
                 full_name="관리자",
-                hashed_password=pwd_context.hash("admin123"),
+                hashed_password=password_hash,
                 is_admin=True,
                 is_active=True
             )
