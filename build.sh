@@ -9,15 +9,8 @@ pip install --upgrade pip
 # Install dependencies
 pip install -r requirements.txt
 
-# Define the data directory for Render's persistent disk
-DATA_DIR="/data"
-DB_FILE="$DATA_DIR/hssdi.db"
-
-# Check if the database file exists
-if [ ! -f "$DB_FILE" ]; then
-  echo "Database not found. Initializing..."
-  # Run the database initialization script
-  python init_db.py
-else
-  echo "Database already exists. Skipping initialization."
-fi
+# Always run the database initialization script.
+# The script is idempotent and safe to run on every build.
+# It will create tables if they don't exist and won't duplicate data.
+echo "Initializing database..."
+python init_db.py
