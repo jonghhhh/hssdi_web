@@ -1,11 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy.orm import declarative_base
 from app.config import settings
-
-# Import all models here to ensure they are registered with the Base
-from app.models import User, Post, Category, Research, News
-
-Base = declarative_base()
+from app.db_base import Base # Import Base from the new central file
 
 engine = create_async_engine(
     settings.database_url,
@@ -25,11 +20,12 @@ async def get_session() -> AsyncSession:
 
 async def create_tables():
     async with engine.begin() as conn:
-        # All models imported above will be created
         await conn.run_sync(Base.metadata.create_all)
 
 async def init_db():
     """데이터베이스 테이블 생성 및 초기 데이터 입력"""
+    # Models are imported here, within the function scope, to be used.
+    from app.models import User, Category, Post
     from sqlalchemy import select
     import asyncio
 
